@@ -6,4 +6,5 @@ vietqr:
   api-key: "9fb6371e-31d5-4003-a9ec-b62644e9f235"
   url:
     create-qr: "https://api.vietqr.io/v2/generate"
-
+    get-list-bank: "https://api.vietqr.io/v2/banks"
+    get-bank-account: "https://api.vietqr.io/v2/lookup"

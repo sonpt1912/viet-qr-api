@@ -1,5 +1,6 @@
 package com.example.vietqr_api.service.impl;
 
+import com.example.vietqr_api.dto.AccountRequest;
 import com.example.vietqr_api.dto.QrRespone;
 import com.example.vietqr_api.dto.TranssactionInfoRequest;
 import com.example.vietqr_api.service.VietQrService;
@@ -29,6 +30,12 @@ public class VietQrServiceImpl implements VietQrService {
 
     @Value("${vietqr.url.create-qr}")
     private String createURL;
+
+    @Value("${vietqr.url.get-list-bank}")
+    private String listBankURL;
+
+    @Value("${vietqr.url.get-bank-account}")
+    private String getBankAccountURL;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -61,5 +68,27 @@ public class VietQrServiceImpl implements VietQrService {
         ResponseEntity<QrRespone> dataResponse = restTemplate.exchange(createURL, HttpMethod.POST, entity, QrRespone.class);
 
         return dataResponse;
+    }
+
+    @Override
+    public Object getListBank() {
+        return restTemplate.getForObject(listBankURL, Object.class);
+    }
+
+    @Override
+    public Object getBankAccount(AccountRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("x-client-id", clientKey);
+        headers.add("x-api-key", apiKey);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("bin", request.getBin());
+        body.put("accountNumber", request.getAccountNumber());
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        return restTemplate.exchange(getBankAccountURL, HttpMethod.POST, entity, Object.class);
+
     }
 }
